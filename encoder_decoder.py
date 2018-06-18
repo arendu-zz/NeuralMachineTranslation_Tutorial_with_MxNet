@@ -28,15 +28,13 @@ if __name__ == '__main__':
                                tgt_vocab_size=len(tgt_corpus.dictionary),
                                embedding_size=options.embedding_size,
                                hidden_size=options.hidden_size,
-                               num_layers=options.num_layers,
-                               dropout=0.3)
+                               num_layers=options.num_layers)
     else:
         model = EncoderDecoder(src_vocab_size=len(src_corpus.dictionary),
                                tgt_vocab_size=len(tgt_corpus.dictionary),
                                embedding_size=options.embedding_size,
                                hidden_size=options.hidden_size,
-                               num_layers=options.num_layers,
-                               dropout=0.3)
+                               num_layers=options.num_layers)
     print(model)
     model.collect_params().initialize(mx.init.Xavier(), ctx=ctx)
     softmax_ce_loss = gluon.loss.SoftmaxCrossEntropyLoss(sparse_label=True, #expects int/categorical labels
