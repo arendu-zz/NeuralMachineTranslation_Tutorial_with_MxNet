@@ -1,194 +1,258 @@
-# jsalt2018-nmt-lab
+# jsalt2019-nmt-lab
 
+### Setup:
 Install mxnet and all the required dependencies with the following commands:
 ```
 $>git clone http://github.com/szha/gluon-crash-course -b jsalt
 $>cd gluon-crash-course
 $>conda env create -f env/environment.yml 
 ```
-
+### RNN Language Model:
 Once you complete filling in all the `TODOs` in `src.models.RNNLM` run the command below and check if you match this output log:
 ```
-python lm.py -t ./data/words/train.es
-RNNLM(
-  (dropout): Dropout(p = 0.0, axes=())
-  (embedding): Embedding(40 -> 100, float32)
-  (rnn): RNN(100 -> 100, TNC)
-  (output): Dense(100 -> 40, linear)
-)
-0 (20 / 84316), loss: 3.726979446411133
-0 (40 / 84316), loss: 3.1106373190879824
-0 (60 / 84316), loss: 3.1474567532539366
-0 (80 / 84316), loss: 3.034141170978546
-0 (100 / 84316), loss: 2.933252203464508
-0 (120 / 84316), loss: 2.949366736412048
-0 (140 / 84316), loss: 2.9076883435249328
-0 (160 / 84316), loss: 2.8319573283195494
-0 (180 / 84316), loss: 2.8311381936073303
-0 (200 / 84316), loss: 2.818974471092224
-0 (220 / 84316), loss: 2.8247193574905394
-0 (240 / 84316), loss: 2.8505154728889464
-0 (260 / 84316), loss: 2.810903549194336
-0 (280 / 84316), loss: 2.80368115901947
-0 (300 / 84316), loss: 2.7881394267082213
+$>python lm.py
+Train Epoch 0, loss: 3.2715672731399534
+Train Epoch 1, loss: 2.9671921730041504
+Train Epoch 2, loss: 2.8810736417770384
+Train Epoch 3, loss: 2.7949750661849975
+Train Epoch 4, loss: 2.7448513865470887
+Train Epoch 5, loss: 2.708175873756409
+Train Epoch 6, loss: 2.651815187931061
+Train Epoch 7, loss: 2.6001593232154847
+Train Epoch 8, loss: 2.5436817049980163
+Train Epoch 9, loss: 2.480805438756943
+Train Epoch 10, loss: 2.4066086947917937
 ```
-
 Now try increasing the number of layers in your RNNLM:
 ```
-$>python lm.py -t ./data/words/train.es --num_layers 3
-RNNLM(
-  (dropout): Dropout(p = 0.3, axes=())
-  (embedding): Embedding(40 -> 100, float32)
-  (rnn): RNN(100 -> 100, TNC, num_layers=3, dropout=0.3)
-  (output): Dense(100 -> 40, linear)
-)
-0 (20 / 84316), loss: 3.783879339694977
-0 (40 / 84316), loss: 3.26540789604187
-0 (60 / 84316), loss: 3.222878885269165
-0 (80 / 84316), loss: 3.2052329659461973
-0 (100 / 84316), loss: 3.106749212741852
-0 (120 / 84316), loss: 3.0908856272697447
-0 (140 / 84316), loss: 3.034270131587982
-0 (160 / 84316), loss: 2.9749829173088074
-0 (180 / 84316), loss: 2.9491508483886717
-0 (200 / 84316), loss: 2.9033187508583067
-0 (220 / 84316), loss: 2.896671462059021
-0 (240 / 84316), loss: 2.9300551533699037
-0 (260 / 84316), loss: 2.918925333023071
-0 (280 / 84316), loss: 2.8628843784332276
-0 (300 / 84316), loss: 2.909125304222107
+$>python lm.py --num_layers 3
+Train Epoch 0, loss: 3.163326895236969
+Train Epoch 1, loss: 2.9031516671180726
+Train Epoch 2, loss: 2.8718849301338194
+Train Epoch 3, loss: 2.7825149416923525
+Train Epoch 4, loss: 2.740653133392334
+Train Epoch 5, loss: 2.699657416343689
+Train Epoch 6, loss: 2.64787814617157
+Train Epoch 7, loss: 2.587969148159027
+Train Epoch 8, loss: 2.511477828025818
+Train Epoch 9, loss: 2.451095974445343
+Train Epoch 10, loss: 2.35848348736763
 ```
-
+### Encoder-Decoder Model for translation:
 Next you will implement a simple encoder-decoder without attention.
 Complete the scaffolding code in `src.models.EncoderDecoder` and run the command below:
 ```
-python encoder_decoder.py --src_train ./data/words/train.es --tgt_train ./data/words/train.pt
-EncoderDecoder(
-  (encoder): RNNLM(
-    (dropout): Dropout(p = 0.0, axes=())
-    (embedding): Embedding(40 -> 100, float32)
-    (rnn): RNN(100 -> 100, TNC)
-    (output): Dense(100 -> 40, linear)
-  )
-  (decoder): RNNLM(
-    (dropout): Dropout(p = 0.0, axes=())
-    (embedding): Embedding(40 -> 100, float32)
-    (rnn): RNN(100 -> 100, TNC)
-    (output): Dense(100 -> 40, linear)
-  )
-)
-0 (20 / 84316), loss: 3.5951297521591186
-0 (40 / 84316), loss: 2.9892606258392336
-0 (60 / 84316), loss: 2.9440046548843384
-0 (80 / 84316), loss: 2.8132421135902406
-0 (100 / 84316), loss: 2.8034116506576536
-0 (120 / 84316), loss: 2.752419650554657
-0 (140 / 84316), loss: 2.664055275917053
-0 (160 / 84316), loss: 2.5977513015270235
-0 (180 / 84316), loss: 2.651363104581833
-0 (200 / 84316), loss: 2.5822153210639955
-0 (220 / 84316), loss: 2.6784459233283995
-0 (240 / 84316), loss: 2.529151886701584
-0 (260 / 84316), loss: 2.6145973801612854
-0 (280 / 84316), loss: 2.6833040833473207
-0 (300 / 84316), loss: 2.4839312553405763
+$>python encoder_decoder.py
+0 (5 / 20), loss: 3.9483273029327393
+0 (10 / 20), loss: 3.208091640472412
+0 (15 / 20), loss: 3.095386266708374
+Train Epoch 0, loss: 3.17526136636734
+1 (5 / 20), loss: 3.4073556423187257
+1 (10 / 20), loss: 2.6471239566802978
+1 (15 / 20), loss: 2.9639118671417237
+Train Epoch 1, loss: 2.82170147895813
+2 (5 / 20), loss: 3.328487682342529
+2 (10 / 20), loss: 2.948730802536011
+2 (15 / 20), loss: 2.684615230560303
+Train Epoch 2, loss: 2.754596674442291
+3 (5 / 20), loss: 3.4415226936340333
+3 (10 / 20), loss: 2.584901762008667
+3 (15 / 20), loss: 2.5777024745941164
+Train Epoch 3, loss: 2.669452965259552
+4 (5 / 20), loss: 3.073537015914917
+4 (10 / 20), loss: 2.8063485622406006
+4 (15 / 20), loss: 2.329734683036804
+Train Epoch 4, loss: 2.6050745785236358
+5 (5 / 20), loss: 2.8794105052948
+5 (10 / 20), loss: 2.7639767646789553
+5 (15 / 20), loss: 2.5976045608520506
+Train Epoch 5, loss: 2.557079529762268
 ```
-
 Now increase the number of layers:
 ```
-python encoder_decoder.py --src_train ./data/words/train.es --tgt_train ./data/words/train.pt --num_layers 3
-EncoderDecoder(
-  (encoder): RNNLM(
-    (dropout): Dropout(p = 0.0, axes=())
-    (embedding): Embedding(40 -> 100, float32)
-    (rnn): RNN(100 -> 100, TNC, num_layers=3)
-    (output): Dense(100 -> 40, linear)
-  )
-  (decoder): RNNLM(
-    (dropout): Dropout(p = 0.0, axes=())
-    (embedding): Embedding(40 -> 100, float32)
-    (rnn): RNN(100 -> 100, TNC, num_layers=3)
-    (output): Dense(100 -> 40, linear)
-  )
-)
-0 (20 / 84316), loss: 4.082468640804291
-0 (40 / 84316), loss: 3.1678009986877442
-0 (60 / 84316), loss: 3.1164113759994505
-0 (80 / 84316), loss: 3.1208514094352724
-0 (100 / 84316), loss: 3.0065815687179565
-0 (120 / 84316), loss: 3.0014429450035096
-0 (140 / 84316), loss: 2.9589979529380797
-0 (160 / 84316), loss: 2.8412908554077148
-0 (180 / 84316), loss: 2.830174469947815
-0 (200 / 84316), loss: 2.8452255010604857
-0 (220 / 84316), loss: 2.898094516992569
-0 (240 / 84316), loss: 2.787045431137085
-0 (260 / 84316), loss: 2.772556495666504
-0 (280 / 84316), loss: 3.1168592810630797
-0 (300 / 84316), loss: 2.8500282645225523
+$>python encoder_decoder.py --num_layers 3
+0 (5 / 20), loss: 3.9218214988708495
+0 (10 / 20), loss: 3.180419683456421
+0 (15 / 20), loss: 3.0194921493530273
+Train Epoch 0, loss: 3.13070627450943
+1 (5 / 20), loss: 3.383973217010498
+1 (10 / 20), loss: 2.685383176803589
+1 (15 / 20), loss: 2.880984592437744
+Train Epoch 1, loss: 2.8040854811668394
+2 (5 / 20), loss: 3.1793892860412596
+2 (10 / 20), loss: 2.871953582763672
+2 (15 / 20), loss: 2.6747466564178466
+Train Epoch 2, loss: 2.6990251898765565
+3 (5 / 20), loss: 3.2255905628204347
+3 (10 / 20), loss: 2.6241029262542725
+3 (15 / 20), loss: 2.4569656372070314
+Train Epoch 3, loss: 2.5741503477096557
+4 (5 / 20), loss: 2.8779995441436768
+4 (10 / 20), loss: 2.6343345642089844
+4 (15 / 20), loss: 2.2493020057678224
+Train Epoch 4, loss: 2.504862344264984
+5 (5 / 20), loss: 2.744069218635559
+5 (10 / 20), loss: 2.563315749168396
+5 (15 / 20), loss: 2.476594352722168
+Train Epoch 5, loss: 2.4543148636817933
 ```
 
+### Encoder-Decoder Model with Attention:
 Finally, you are ready to implement an encoder-decoder with attention.
-Complete the scaffolding code in `src.models.EncoderDecoderAttention` and run the command below:
+Complete the scaffolding code in `src.models.EncoderDecoderAttention` class. 
+For this part you ONLY need to fill in the `__ini__` and `forward` methods.
+Tun the command below.
+The serialized model is shown in the log below for additional help.
 ```
-python encoder_decoder.py --src_train ./data/words/train.es --tgt_train ./data/words/train.pt --attn
+$>python encoder_decoder.py --attn
 EncoderDecoderAttention(
   (dropout): Dropout(p = 0.0, axes=())
   (encoder): RNN(100 -> 100, TNC, bidirectional)
-  (src_embedding): Embedding(40 -> 100, float32)
+  (src_embedding): Embedding(29 -> 100, float32)
   (attention): Dense(300 -> 1, linear)
   (decoder_cell): SequentialRNNCell(
   (0): RNNCell(300 -> 100, tanh)
   )
-  (output): Dense(100 -> 40, linear)
-  (tgt_embedding): Embedding(40 -> 100, float32)
+  (output): Dense(100 -> 27, linear)
+  (tgt_embedding): Embedding(27 -> 100, float32)
 )
-0 (20 / 84316), loss: 3.831316685676575
-0 (40 / 84316), loss: 3.3857186913490294
-0 (60 / 84316), loss: 3.2950724005699157
-0 (80 / 84316), loss: 3.1895662546157837
-0 (100 / 84316), loss: 3.1972587585449217
-0 (120 / 84316), loss: 3.194217872619629
-0 (140 / 84316), loss: 3.0651586174964907
-0 (160 / 84316), loss: 3.0520243644714355
-0 (180 / 84316), loss: 3.0168715000152586
-0 (200 / 84316), loss: 3.0374971508979796
-0 (220 / 84316), loss: 2.984034526348114
-0 (240 / 84316), loss: 2.9802499413490295
-0 (260 / 84316), loss: 2.8145950198173524
-0 (280 / 84316), loss: 3.0609739780426026
-0 (300 / 84316), loss: 2.9290491223335264
+0 (5 / 20), loss: 3.9554842948913573
+0 (10 / 20), loss: 3.1437063694000242
+0 (15 / 20), loss: 2.9759069442749024
+Train Epoch 0, loss: 3.1135228872299194
+1 (5 / 20), loss: 3.379365253448486
+1 (10 / 20), loss: 2.6872398853302
+1 (15 / 20), loss: 2.9530708312988283
+Train Epoch 1, loss: 2.8238080739974976
+2 (5 / 20), loss: 3.206978273391724
+2 (10 / 20), loss: 2.9199341773986816
+2 (15 / 20), loss: 2.767395353317261
+Train Epoch 2, loss: 2.737170135974884
+3 (5 / 20), loss: 3.4210769653320314
+3 (10 / 20), loss: 2.621690273284912
+3 (15 / 20), loss: 2.5839598178863525
+Train Epoch 3, loss: 2.6706495881080627
+4 (5 / 20), loss: 3.0854537963867186
+4 (10 / 20), loss: 2.7246798992156984
+4 (15 / 20), loss: 2.351749849319458
+Train Epoch 4, loss: 2.599903738498688
+5 (5 / 20), loss: 2.862346124649048
+5 (10 / 20), loss: 2.6246942043304444
+5 (15 / 20), loss: 2.640377998352051
+Train Epoch 5, loss: 2.5478350639343263
 ```
 
 Again, your implementation should support increasing the number of layers, run the command below:
 ```
-python encoder_decoder.py --src_train ./data/words/train.es --tgt_train ./data/words/train.pt --attn --num_layers 3
+$>python encoder_decoder.py --attn --num_layers 3
 EncoderDecoderAttention(
   (dropout): Dropout(p = 0.0, axes=())
   (encoder): RNN(100 -> 100, TNC, num_layers=3, bidirectional)
-  (src_embedding): Embedding(40 -> 100, float32)
+  (src_embedding): Embedding(29 -> 100, float32)
   (attention): Dense(300 -> 1, linear)
   (decoder_cell): SequentialRNNCell(
   (0): RNNCell(300 -> 100, tanh)
   (1): RNNCell(None -> 100, tanh)
   (2): RNNCell(None -> 100, tanh)
   )
-  (output): Dense(100 -> 40, linear)
-  (tgt_embedding): Embedding(40 -> 100, float32)
+  (output): Dense(100 -> 27, linear)
+  (tgt_embedding): Embedding(27 -> 100, float32)
 )
-0 (20 / 84316), loss: 4.183947658538818
-0 (40 / 84316), loss: 3.7976392269134522
-0 (60 / 84316), loss: 3.653985357284546
-0 (80 / 84316), loss: 3.784492886066437
-0 (100 / 84316), loss: 3.4958001017570495
-0 (120 / 84316), loss: 3.5960230469703673
-0 (140 / 84316), loss: 3.4644107460975646
-0 (160 / 84316), loss: 3.34350346326828
-0 (180 / 84316), loss: 3.3598593950271605
-0 (200 / 84316), loss: 3.4301453948020937
-0 (220 / 84316), loss: 3.3763737201690676
-0 (240 / 84316), loss: 3.4125502824783327
-0 (260 / 84316), loss: 3.345878207683563
-0 (280 / 84316), loss: 3.414934813976288
-0 (300 / 84316), loss: 3.272854042053223
+0 (5 / 20), loss: 3.8929978370666505
+0 (10 / 20), loss: 3.081466245651245
+0 (15 / 20), loss: 2.8262250900268553
+Train Epoch 0, loss: 3.0467529892921448
+1 (5 / 20), loss: 3.2727338790893556
+1 (10 / 20), loss: 2.5672556877136232
+1 (15 / 20), loss: 2.9814534187316895
+Train Epoch 1, loss: 2.8001124382019045
+2 (5 / 20), loss: 3.054044723510742
+2 (10 / 20), loss: 2.994654989242554
+2 (15 / 20), loss: 2.7612091064453126
+Train Epoch 2, loss: 2.705072486400604
+3 (5 / 20), loss: 3.3236002922058105
+3 (10 / 20), loss: 2.6024903774261476
+3 (15 / 20), loss: 2.4555612564086915
+Train Epoch 3, loss: 2.5969822883605955
+4 (5 / 20), loss: 2.8675305366516115
+4 (10 / 20), loss: 2.673336458206177
+4 (15 / 20), loss: 2.3176249504089355
+Train Epoch 4, loss: 2.522545802593231
+5 (5 / 20), loss: 2.800323486328125
+5 (10 / 20), loss: 2.5203219175338747
+5 (15 / 20), loss: 2.52230224609375
+Train Epoch 5, loss: 2.466957634687424
 ```
+
+### Inference:
+Where are the translations? So you you have implemented just the training methods. To obtain translations you need to fill in the TODOs in the `inference` method in `src.model.EncoderDecoderAttention`.
+Enable inference in the output log with the following command:
+```
+python encoder_decoder.py --attn --inference
+EncoderDecoderAttention(
+  (dropout): Dropout(p = 0.0, axes=())
+  (encoder): RNN(100 -> 100, TNC, bidirectional)
+  (src_embedding): Embedding(29 -> 100, float32)
+  (attention): Dense(300 -> 1, linear)
+  (decoder_cell): SequentialRNNCell(
+  (0): RNNCell(300 -> 100, tanh)
+  )
+  (output): Dense(100 -> 27, linear)
+  (tgt_embedding): Embedding(27 -> 100, float32)
+)
+0 (5 / 20), loss: 3.9554842948913573
+0 (10 / 20), loss: 3.1437063217163086
+0 (15 / 20), loss: 2.975906991958618
+Train Epoch 0, loss: 3.1135228991508486
+c r i s i s-->e e e
+r e s p e c t o-->e e e
+r e n u n c i a-->e e e
+a l e g a n-->e e e
+m u j e r e s-->e e e
+d i g i t a l e s-->e e e
+t e n e m o s-->e e e
+e s t a d i o-->e e e
+s u s-->e e e
+j ó v e n e s-->e e e
+d e t e n i d o-->e e e
+e s t o s-->e e e
+t i e m p o-->e e e
+a ñ o s-->e e e
+p r o y e c t o s-->e e e
+c o n t i n ú a-->e e e
+c o n f l i c t o-->e e e
+t a m b i é n-->e e e
+a q u í-->e e e
+d i v i d i d a-->e e e
+```
+
+After 100 epochs this was my model's predictions:
+```
+99 (5 / 20), loss: 0.11365396194159985
+99 (10 / 20), loss: 0.03295676745474339
+99 (15 / 20), loss: 0.07633087364956737
+Train Epoch 99, loss: 0.07905320851132273
+c r i s i s-->c r i s e s
+r e s p e c t o-->r e s p e i t s
+r e n u n c i a-->r e n ú n c i a
+a l e g a n-->a l e g a m
+m u j e r e s-->m u l h e r e s
+d i g i t a l e s-->d i g i t a u s
+t e n e m o s-->t e m o s
+e s t a d i o-->e s t á d o
+s u s-->s e u s
+j ó v e n e s-->j o o e e s
+d e t e n i d o-->d e t i d o
+e s t o s-->e s t e s
+t i e m p o-->t e m p o
+a ñ o s-->a n o s
+p r o y e c t o s-->p o o j e t o o
+c o n t i n ú a-->c o n t i n u a
+c o n f l i c t o-->c o n f l i t o
+t a m b i é n-->t a m b a m
+a q u í-->a q u i
+d i v i d i d a-->d i v i d i u
+```
+
+#### Credits
+This assignment was created by [Adi Renduchintala](https://arendu.github.io/) with assitance from [Shuyang Ding](http://www.cs.jhu.edu/~sding/) for the [JSALT Summer School 2018](https://www.clsp.jhu.edu/workshops/18-workshop/2018-jhu-summer-school-on-human-language-technology/) Neural Machine Translation tutorial. Contact [Adi Renduchintala](https://arendu.github.io/) for solutions (completed code).
