@@ -59,7 +59,7 @@ class EncoderDecoder(gluon.Block):
         self.embedding_size = embedding_size
         self.num_layers = num_layers
         with self.name_scope():
-            #TODO: create an encoder RNNLM 
+            #TODO: create an encoder RNNLM, perhaps using the class you just created
             #TODO: create a decoder RNNLM
             pass
 
@@ -72,7 +72,8 @@ class EncoderDecoder(gluon.Block):
         y (mx.ndarray): target sequence excluding the <EOS> symbol
         """
         #TODO: "encode" the source sequence by passing the input x through the encoder RNNLM.
-        #TODO: decode the target sequence using the decoder AND the last hidden state from the encoder.
+        #TODO: the output of the encoding step should return a sequence or output distributions and a seqence of hidden states (optionally also returns the final hidden state(s))
+        #TODO: decode the target sequence using the decoder AND the final hidden state from the encoder.
         return out_tgt
 
 class EncoderDecoderAttention(gluon.Block):
