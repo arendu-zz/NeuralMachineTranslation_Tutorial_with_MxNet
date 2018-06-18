@@ -10,7 +10,9 @@ $>conda env create -f env/environment.yml
 ### Lab Setup:
 Clone this repo:
 ```
-$>git clone https://github.com/arendu/jsalt2018-nmt-lab.git
+$>git clone https://github.com/arendu/jsalt2018-nmt-lab-public.git
+$>cd jsalt2018-nmt-lab-public
+$>source activate jsalt_gluon_nlp
 ```
 ### RNN Language Model:
 Once you complete filling in all the `TODOs` in `src.models.RNNLM` run the command below and check if you match this output log:
