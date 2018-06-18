@@ -15,6 +15,7 @@ class RNNLM(gluon.Block):
         self.hidden_size = hidden_size
         self.num_layers = num_layers
         with self.name_scope():
+            #TODO: create a drouput layer
             #TODO: create an embedding layer here 
             #TODO: the embedding layer takes a sequence of ints and converts them into a sequence of real-valued vectors
             #TODO: refer to https://mxnet.incubator.apache.org/api/python/gluon/nn.html 
@@ -36,8 +37,10 @@ class RNNLM(gluon.Block):
         """
         #TODO: use the embedding layer to convert x into a sequence of vector representations
         #emb should be (seq_len, batch_size, embedding_size)
+        #TODO: apply dropout to the resulting embedding sequence
         #TODO: use rnn over the vector representations
         # you might want to separately handle when init_hidden_state is None and when its not None
+        #TODO: apply dropout to the output of the rnn (i.e. the sequence of hidden states)
         #TODO: shape the output of the rnn layer to "fit" with the Dense layer
         #TODO: https://mxnet.incubator.apache.org/api/python/gluon/nn.html#mxnet.gluon.nn.Dense
         return outputs, hidden_states, final_states
@@ -86,6 +89,7 @@ class EncoderDecoderAttention(gluon.Block):
         self.embedding_size = embedding_size
         self.num_layers = num_layers
         with self.name_scope():
+            #TODO: create a dropout layer
             #TODO: create an encoder RNN
             #unlike the RNNLM and EncoderDecoder model this time the encoder should be bidirectional
             #TODO: create a source side embedding layer
@@ -110,6 +114,7 @@ class EncoderDecoderAttention(gluon.Block):
         y (mx.ndarray): target sequence excluding the <EOS> symbol
         """
         #TODO: use the source embedding to convert the source sentence into a vector sequence
+        #TODO: apply dropout to the embeddings
 
         #TODO: use the source encoder to "encode" the vector sequence and get a sequence of hidden states
 
