@@ -7,21 +7,26 @@ import mxnet as mx
 from mxnet import nd, autograd, gluon
 import random
 
+import pdb
+
 if __name__ == '__main__':
     random.seed(1234)
     mx.random.seed(1234)
     opt= argparse.ArgumentParser(description="write program description here")
     #insert options here
-    opt.add_argument('--src_train', action='store' , dest='src_train', default='./data/translation/train.en')
-    opt.add_argument('--tgt_train', action='store' , dest='tgt_train', default='./data/translation/train.fr')
+    opt.add_argument('--src_train', action='store' , dest='src_train', default='./data/words/toy.es')
+    opt.add_argument('--tgt_train', action='store' , dest='tgt_train', default='./data/words/toy.pt')
+    opt.add_argument('--src_dev', action='store' , dest='src_dev', default='./data/words/toy.es')
+    opt.add_argument('--tgt_dev', action='store' , dest='tgt_dev', default='./data/words/toy.pt')
     opt.add_argument('--embedding_size', action='store', dest='embedding_size', default=100, type=int)
     opt.add_argument('--hidden_size', action='store', dest='hidden_size', default=100, type=int)
     opt.add_argument('--num_layers', action='store', dest='num_layers', default=1, type=int)
     opt.add_argument('--attn', action='store_true' ,dest='use_attention', default=False)
+    opt.add_argument('--inference', action='store_true', dest='do_inference', default=False)
     options = opt.parse_args()
     ctx = mx.cpu(0)
-    src_corpus = Corpus(options.src_train)
-    tgt_corpus = Corpus(options.tgt_train)
+    src_corpus = Corpus(options.src_train, options.src_dev)
+    tgt_corpus = Corpus(options.tgt_train, options.tgt_dev)
 
     if options.use_attention:
         model = EncoderDecoderAttention(src_vocab_size=len(src_corpus.dictionary),
@@ -40,11 +45,11 @@ if __name__ == '__main__':
     softmax_ce_loss = gluon.loss.SoftmaxCrossEntropyLoss(sparse_label=True, #expects int/categorical labels
                                               from_logits=False, #expects unnormalized numbers
                                               batch_axis=0)
-    trainer = gluon.Trainer(model.collect_params(), 'sgd', {'learning_rate': 1.0})
+    trainer = gluon.Trainer(model.collect_params(), 'sgd', {'learning_rate': 0.1})
     batch_size = 1
-    log_interval = 20
+    log_interval = 5
     clip=1.0
-    epochs = 2
+    epochs = 100
     instance_idxs = list(range(len(src_corpus.numberized_train)))
     for e in range(epochs):
         total_L = 0.
@@ -75,6 +80,17 @@ if __name__ == '__main__':
                 print("%s (%s / %s), loss: %s" % (e, idx, len(src_corpus.numberized_train), interval_L/ log_interval))
                 interval_L = 0
         print("Train Epoch %s, loss: %s" % (e, total_L/ len(src_corpus.numberized_train)))
+        if options.use_attention and options.do_inference:
+            for dev_idx in range(len(src_corpus.numberized_dev)):
+                dev_src_input = src_corpus.numberized_dev[dev_idx]
+                dev_src_labels = dev_src_input[1:]
+                dev_src_input = dev_src_input.reshape(dev_src_input.shape[0], batch_size)
+                dev_src_input = dev_src_input.as_in_context(ctx)
+                tgt_outputs = model.inference(dev_src_input)
+                src_str = ' '.join([src_corpus.dictionary.idx2char[s.asscalar()] for s in dev_src_input[1:-1]])
+                tgt_str = ' '.join([tgt_corpus.dictionary.idx2char[t.asscalar()] for t in tgt_outputs[:-1]])
+                print(src_str + '-->' + tgt_str)
+            print('')
 
 
 

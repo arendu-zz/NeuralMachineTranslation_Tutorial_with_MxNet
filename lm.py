@@ -12,7 +12,7 @@ if __name__ == '__main__':
     mx.random.seed(1234)
     opt= argparse.ArgumentParser(description="write program description here")
     #insert options here
-    opt.add_argument('-t', action='store' , dest='train_file', default='./data/translation/train.en')
+    opt.add_argument('-t', action='store' , dest='train_file', default='./data/words/toy.es')
     opt.add_argument('--embedding_size', action='store', dest='embedding_size', default=100, type=int)
     opt.add_argument('--hidden_size', action='store', dest='hidden_size', default=100, type=int)
     opt.add_argument('--num_layers', action='store', dest='num_layers', default=1, type=int)
@@ -33,7 +33,7 @@ if __name__ == '__main__':
     batch_size = 1
     log_interval = 20
     clip=1.0
-    epochs = 2
+    epochs = 20
     for e in range(epochs):
         total_L = 0
         interval_L = 0

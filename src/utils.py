@@ -37,7 +37,7 @@ class Corpus(object):
         else:
             self.numberized_dev = []
 
-    def init_dictionary(self, train_file, min_count=2):
+    def init_dictionary(self, train_file, min_count=0):
         d = Dictionary()
         with open(train_file, 'r', encoding='utf-8') as corpus:
             for line in corpus:

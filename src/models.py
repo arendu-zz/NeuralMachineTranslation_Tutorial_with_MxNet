@@ -10,7 +10,7 @@ class RNNLM(gluon.Block):
                  embedding_size=100,
                  hidden_size=100,
                  num_layers=1,
-                 dropout=0.3, **kwargs):
+                 dropout=0.0, **kwargs):
         super(RNNLM, self).__init__(**kwargs)
         self.hidden_size = hidden_size
         self.num_layers = num_layers
@@ -53,7 +53,7 @@ class EncoderDecoder(gluon.Block):
                 embedding_size=100,
                 hidden_size=100,
                 num_layers=1,
-                dropout=0.3, **kwargs):
+                dropout=0.0, **kwargs):
         super(EncoderDecoder, self).__init__(**kwargs)
         self.hidden_size = hidden_size
         self.embedding_size = embedding_size
@@ -83,7 +83,7 @@ class EncoderDecoderAttention(gluon.Block):
                 embedding_size=100,
                 hidden_size=100,
                 num_layers=1,
-                dropout=0.3, **kwargs):
+                dropout=0.0, **kwargs):
         super(EncoderDecoderAttention, self).__init__(**kwargs)
         self.hidden_size = hidden_size
         self.context_size = 2 * hidden_size
@@ -180,3 +180,55 @@ class EncoderDecoderAttention(gluon.Block):
         #TODO: take the weighted avg of the src_hidden_states
         #TODO: you may find this utilities helpful https://mxnet.incubator.apache.org/api/python/ndarray/ndarray.html#expanding-array-elements
         return context_vector
+
+    def inference(self, x, max_len=10):
+        """
+        Forward computation for EncoderDecoderAttention
+
+        Parameters:
+        x (mx.ndarray): source sequence including the <EOS> symbol
+        max_len (int): maximum allowed length of the output sentence
+        """
+        #TODO: use the source embedding to convert the source sentence into a vector sequence
+        #TODO: dropout the embeddings
+
+        #TODO: use the source encoder to "encode" the vector sequence and get a sequence of hidden states
+
+        
+        #TODO: initialize a zero ndarray to represent the initial state of the previous time-step target side hidden state
+        #TODO: if you want to use more than one layer you may want to use "begin_state" functionality https://mxnet.incubator.apache.org/api/python/gluon/rnn.html#mxnet.gluon.rnn.RecurrentCell.begin_state
+
+        #TODO: initialize a zero ndarray to represent the initial embedding of the previous time-step target output
+        
+        #a ouputs list which will store unnormalized outputs for each target side word
+        outputs = []
+        # loop over each word in the target sequence
+        j = 0
+        curr_vocab = mx.nd.array([0])
+        while j <= max_len and curr_vocab.asscalar() != 1:
+            #TODO: use the get_attention_weights function and get a set of attention weights for the j'th target word
+            #TODO: the input to get_attention_weights is the sequence of source-side hidden states and the previous target-side hidden state
+
+            #TODO: using the attention weights and the source-side hidden states get the context vector using the "get_context_vector" function.
+
+            #TODO:Use the decoder cell to get the current target-side hidden state
+            #TODO:The inputs for the decoder cell are (i) the context vector concated with  previous target word embedding and (ii) the previous target-side hidden state
+
+            #TODO: get the unnormalized output using the current target-side hidden state and the output layer
+
+            #TODO: pick the word idx with max unnormalized probability
+            #TODO: append the best guess word into the outputs buffer
+            
+            #TODO: set the previous target-side hidden state as the current target-side hidden state (in preparation for the next iteration through this loop)
+            #TODO: if your decoder was multi-layer you should use all the internal hidden_states
+
+            #TODO: set the previous target embedding using the current target-side word (again in preparation for the next iteration through this loop)
+
+            #TODO: increment the max_len tracking counter
+
+            pass
+        
+        outputs = mx.nd.concat(*outputs, dim=0)
+        return outputs
+
+
