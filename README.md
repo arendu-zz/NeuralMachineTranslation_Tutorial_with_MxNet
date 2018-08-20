@@ -100,8 +100,8 @@ Train Epoch 5, loss: 2.345057821273804
 ### Encoder-Decoder Model with Attention:
 Finally, you are ready to implement an encoder-decoder with attention.
 Complete the scaffolding code in `src.models.EncoderDecoderAttention` class. 
-For this part you ONLY need to fill in the `__ini__` and `forward` methods.
-Tun the command below.
+For this part you ONLY need to fill in the `__init__` and `forward` methods.
+Run the commands below.
 The serialized model is shown in the log below for additional help.
 ```
 $>python encoder_decoder.py --attn
