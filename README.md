@@ -185,7 +185,7 @@ Train Epoch 5, loss: 2.359060651063919
 ```
 
 ### Inference:
-Where are the translations? So you you have implemented just the training methods. To obtain translations you need to fill in the TODOs in the `inference` method in `src.model.EncoderDecoderAttention`.
+Where are the translations? So far you have implemented just the training methods. To obtain translations you need to fill in the TODOs in the `inference` method in `src.model.EncoderDecoderAttention`.
 Enable inference in the output log with the following command:
 ```
 python encoder_decoder.py --attn --inference
