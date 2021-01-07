@@ -1,4 +1,5 @@
-# jsalt2019-nmt-lab
+# Neural Machine Translation with MxNet
+## jsalt2019-nmt-lab
 
 ### Setup:
 Install mxnet and all the required dependencies with the following commands:
